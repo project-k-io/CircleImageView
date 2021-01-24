@@ -18,10 +18,10 @@ namespace ProjectK.CircleImageView.Sample
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
         }
 
@@ -33,7 +33,7 @@ namespace ProjectK.CircleImageView.Sample
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
+            var id = item.ItemId;
             if (id == Resource.Id.action_settings)
             {
                 return true;
@@ -44,7 +44,7 @@ namespace ProjectK.CircleImageView.Sample
 
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
-            View view = (View) sender;
+            var view = (View) sender;
             Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
                 .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
         }
