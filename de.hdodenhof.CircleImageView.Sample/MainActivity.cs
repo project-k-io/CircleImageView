@@ -5,9 +5,8 @@ using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
-using Android.Widget;
 
-namespace ProjectK.CircleImageView.Sample
+namespace de.hdodenhof.circleimageview.Sample.Sample
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity

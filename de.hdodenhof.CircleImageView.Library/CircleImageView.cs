@@ -15,73 +15,44 @@
  */
 // package de.hdodenhof.circleimageview;
 
-//import android.annotation.SuppressLint;
-//import android.content.Context;
-//import android.content.res.TypedArray;
-//import android.graphics.Bitmap;
-//import android.graphics.BitmapShader;
-//import android.graphics.Canvas;
-//import android.graphics.Color;
-//import android.graphics.ColorFilter;
-//import android.graphics.Matrix;
-//import android.graphics.Outline;
-//import android.graphics.Paint;
-//import android.graphics.Rect;
-//import android.graphics.RectF;
-//import android.graphics.Shader;
-//import android.graphics.drawable.BitmapDrawable;
-//import android.graphics.drawable.ColorDrawable;
-//import android.graphics.drawable.Drawable;
-//import android.net.Uri;
-//import android.os.Build;
-//import android.util.IAttributeSet;
-//import android.view.MotionEvent;
-//import android.view.View;
-//import android.view.ViewOutlineProvider;
-//import android.widget.ImageView;
-//import androidx.annotation.ColorInt;
-//import androidx.annotation.ColorRes;
-//import androidx.annotation.DrawableRes;
-//import androidx.annotation.NonNull;
-//import androidx.annotation.RequiresApi;
-
-
-
 //AK @SuppressWarnings("UnusedDeclaration")
 
-
+using System;
 using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
-using Android.Net;
 using Android.OS;
+using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
+using Exception = Java.Lang.Exception;
+using Math = Java.Lang.Math;
+using Uri = Android.Net.Uri;
 
-namespace ProjectK.CircleImageView.Library
+namespace de.hdodenhof.circleimageview
 {
     public class CircleImageView : ImageView
     {
 
-        private static ScaleType SCALE_TYPE = ScaleType.CenterCrop;
-        private static Bitmap.Config BITMAP_CONFIG = Bitmap.Config.Argb8888;
+        private static readonly ScaleType SCALE_TYPE = ScaleType.CenterCrop;
+        private static readonly Bitmap.Config BITMAP_CONFIG = Bitmap.Config.Argb8888;
         private const int COLORDRAWABLE_DIMENSION = 2;
 
         private const int DEFAULT_BORDER_WIDTH = 0;
-        private static Color DEFAULT_BORDER_COLOR = Color.Black;
-        private static Color DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.Transparent;
+        private static readonly Color DEFAULT_BORDER_COLOR = Color.Black;
+        private static readonly Color DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.Transparent;
         private const int DEFAULT_IMAGE_ALPHA = 255;
         private const bool DEFAULT_BORDER_OVERLAY = false;
 
-        private RectF mDrawableRect = new RectF();
+        private readonly RectF mDrawableRect = new RectF();
         public RectF mBorderRect = new RectF();
 
-        private Matrix mShaderMatrix = new Matrix();
-        private Paint mBitmapPaint = new Paint();
-        private Paint mBorderPaint = new Paint();
-        private Paint mCircleBackgroundPaint = new Paint();
+        private readonly Matrix mShaderMatrix = new Matrix();
+        private readonly Paint mBitmapPaint = new Paint();
+        private readonly Paint mBorderPaint = new Paint();
+        private readonly Paint mCircleBackgroundPaint = new Paint();
 
         private Color mBorderColor =   DEFAULT_BORDER_COLOR;
         private int mBorderWidth = DEFAULT_BORDER_WIDTH;
@@ -125,6 +96,15 @@ namespace ProjectK.CircleImageView.Library
 
             init();
         }
+
+        public CircleImageView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes)
+        {
+        }
+
+        protected CircleImageView(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+        }
+
 
         private void init()
         {

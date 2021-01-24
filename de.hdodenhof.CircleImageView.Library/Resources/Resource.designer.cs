@@ -8,9 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("ProjectK.CircleImageView.Library.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("de.hdodenhof.circleimageview.Resource", IsApplication=false)]
 
-namespace ProjectK.CircleImageView.Library
+namespace de.hdodenhof.circleimageview
 {
 	
 	

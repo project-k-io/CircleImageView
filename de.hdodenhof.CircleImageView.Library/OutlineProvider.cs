@@ -1,21 +1,21 @@
 using Android.Graphics;
 using Android.Views;
 
-namespace ProjectK.CircleImageView.Library
+namespace de.hdodenhof.circleimageview
 {
     public class OutlineProvider : ViewOutlineProvider
     {
-        private CircleImageView _view;
+        private readonly CircleImageView _view;
         public OutlineProvider(CircleImageView view)
         {
             _view = view;
         }
 
-        public override void GetOutline(View? view, Outline? outline)
+        public override void GetOutline(View view, Outline outline)
         {
             if (_view.mDisableCircularTransformation)
             {
-                ViewOutlineProvider.Background.GetOutline(view, outline);
+                Background.GetOutline(view, outline);
             }
             else
             {
