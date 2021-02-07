@@ -13,14 +13,14 @@ namespace ProjectK.Imaging
 
         public override void GetOutline(View view, Outline outline)
         {
-            if (_view.MDisableCircularTransformation)
+            if (_view.IsDisableCircularTransformation && Background != null)
             {
                 Background.GetOutline(view, outline);
             }
             else
             {
                 var bounds = new Rect();
-                _view.MBorderRect.RoundOut(bounds);
+                _view.BorderRect.RoundOut(bounds);
                 outline.SetRoundRect(bounds, bounds.Width() / 2.0f);
             }
         }
