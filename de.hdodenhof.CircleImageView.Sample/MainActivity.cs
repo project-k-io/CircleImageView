@@ -6,7 +6,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 
-namespace de.hdodenhof.circleimageview.Sample.Sample
+namespace de.hdodenhof.circleimageview.Sample
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
@@ -21,7 +21,8 @@ namespace de.hdodenhof.circleimageview.Sample.Sample
             SetSupportActionBar(toolbar);
 
             var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
+            if(fab != null)
+                fab.Click += FabOnClick;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -45,7 +46,7 @@ namespace de.hdodenhof.circleimageview.Sample.Sample
         {
             var view = (View) sender;
             Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+                .SetAction("Action", (View.IOnClickListener)null).Show();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
