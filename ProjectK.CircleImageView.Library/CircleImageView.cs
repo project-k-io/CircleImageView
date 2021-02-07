@@ -215,11 +215,15 @@ namespace ProjectK.Imaging
                 if (_rebuildShader)
                 {
                     _rebuildShader = false;
+                    var tileX = Shader.TileMode.Clamp;
+                    var tileY = Shader.TileMode.Clamp;
+                    if (tileX != null && tileY != null)
+                    {
+                        var bitmapShader = new BitmapShader(_bitmap, tileX, tileY);
+                        bitmapShader.SetLocalMatrix(_shaderMatrix);
+                        _bitmapPaint.SetShader(bitmapShader);
+                    }
 
-                    var bitmapShader = new BitmapShader(_bitmap, Shader.TileMode.Clamp, Shader.TileMode.Clamp);
-                    bitmapShader.SetLocalMatrix(_shaderMatrix);
-
-                    _bitmapPaint.SetShader(bitmapShader);
                 }
 
                 canvas.DrawCircle(_drawableRect.CenterX(), _drawableRect.CenterY(), _drawableRadius, _bitmapPaint);
@@ -525,16 +529,6 @@ namespace ProjectK.Imaging
             _circleBackgroundPaint.Color = circleBackgroundColor;
             Invalidate();
         }
-
-        /**
-     * @deprecated Use {@link #setCircleBackgroundColor(int)} instead
-     */
-        //AK @Deprecated
-        public void SetCircleBackgroundColorResource(/*AK @ColorRes*/ int circleBackgroundRes)
-        {
-            SetCircleBackgroundColor(Context.Resources.GetColor(circleBackgroundRes));
-        }
-
 
         #endregion
 
