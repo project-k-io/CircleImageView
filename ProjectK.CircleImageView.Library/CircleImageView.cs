@@ -146,10 +146,6 @@ namespace ProjectK.Imaging
 
         #region Constructors
 
-        public CircleImageView(Context context) : base(context)
-        {
-            Init();
-        }
         public CircleImageView(Context context, IAttributeSet attrs) : this(context, attrs, 0)
         {
         }
@@ -165,9 +161,6 @@ namespace ProjectK.Imaging
             a.Recycle();
 
             Init();
-        }
-        public CircleImageView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes)
-        {
         }
         protected CircleImageView(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
