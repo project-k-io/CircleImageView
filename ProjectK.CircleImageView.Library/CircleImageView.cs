@@ -37,46 +37,41 @@ namespace ProjectK.Imaging
     {
 
         private static readonly ScaleType SCALE_TYPE = ScaleType.CenterCrop;
-        private static readonly Bitmap.Config BITMAP_CONFIG = Bitmap.Config.Argb8888;
-        private const int COLORDRAWABLE_DIMENSION = 2;
+        private static readonly Bitmap.Config BitmapConfig = Bitmap.Config.Argb8888;
+        private static readonly Color DefaultBorderColor = Color.Black;
+        private static readonly Color DefaultCircleBackgroundColor = Color.Transparent;
 
-        private const int DEFAULT_BORDER_WIDTH = 0;
-        private static readonly Color DEFAULT_BORDER_COLOR = Color.Black;
-        private static readonly Color DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.Transparent;
-        private const int DEFAULT_IMAGE_ALPHA = 255;
-        private const bool DEFAULT_BORDER_OVERLAY = false;
+        private const int ColorDrawableDimension = 2;
+        private const int DefaultBorderWidth = 0;
+        private const int DefaultImageAlpha = 255;
+        private const bool DefaultBorderOverlay = false;
 
-        private readonly RectF mDrawableRect = new RectF();
-        public RectF mBorderRect = new RectF();
+        private readonly RectF _drawableRect = new RectF();
+        public RectF MBorderRect = new RectF();
+        public bool MDisableCircularTransformation;
 
-        private readonly Matrix mShaderMatrix = new Matrix();
-        private readonly Paint mBitmapPaint = new Paint();
-        private readonly Paint mBorderPaint = new Paint();
-        private readonly Paint mCircleBackgroundPaint = new Paint();
+        private readonly Matrix _shaderMatrix = new Matrix();
+        private readonly Paint _bitmapPaint = new Paint();
+        private readonly Paint _borderPaint = new Paint();
+        private readonly Paint _circleBackgroundPaint = new Paint();
 
-        private Color mBorderColor =   DEFAULT_BORDER_COLOR;
-        private int mBorderWidth = DEFAULT_BORDER_WIDTH;
-        private Color mCircleBackgroundColor = DEFAULT_CIRCLE_BACKGROUND_COLOR;
-        private int mImageAlpha = DEFAULT_IMAGE_ALPHA;
-
-        private Bitmap mBitmap;
-        private Canvas mBitmapCanvas;
-
-        private float mDrawableRadius;
-        private float mBorderRadius;
-
-        private ColorFilter mColorFilter;
-
-        private bool mInitialized;
-        private bool mRebuildShader;
-        private bool mDrawableDirty;
-
-        private bool mBorderOverlay;
-        public bool mDisableCircularTransformation;
+        private Color _borderColor =   DefaultBorderColor;
+        private int _borderWidth = DefaultBorderWidth;
+        private Color _circleBackgroundColor = DefaultCircleBackgroundColor;
+        private int _imageAlpha = DefaultImageAlpha;
+        private Bitmap _bitmap;
+        private Canvas _bitmapCanvas;
+        private float _drawableRadius;
+        private float _borderRadius;
+        private ColorFilter _mColorFilter;
+        private bool _initialized;
+        private bool _rebuildShader;
+        private bool _drawableDirty;
+        private bool _borderOverlay;
 
         public CircleImageView(Context context) : base(context)
         {
-            init();
+            Init();
         }
 
         public CircleImageView(Context context, IAttributeSet attrs) : this(context, attrs, 0)
@@ -87,14 +82,14 @@ namespace ProjectK.Imaging
         {
             var a = context.ObtainStyledAttributes(attrs, Resource.Styleable.CircleImageView, defStyle, 0);
 
-            mBorderWidth = a.GetDimensionPixelSize(Resource.Styleable.CircleImageView_civ_border_width, DEFAULT_BORDER_WIDTH);
-            mBorderColor = a.GetColor(Resource.Styleable.CircleImageView_civ_border_color, DEFAULT_BORDER_COLOR);
-            mBorderOverlay = a.GetBoolean(Resource.Styleable.CircleImageView_civ_border_overlay, DEFAULT_BORDER_OVERLAY);
-            mCircleBackgroundColor = a.GetColor(Resource.Styleable.CircleImageView_civ_circle_background_color, DEFAULT_CIRCLE_BACKGROUND_COLOR);
+            _borderWidth = a.GetDimensionPixelSize(Resource.Styleable.CircleImageView_civ_border_width, DefaultBorderWidth);
+            _borderColor = a.GetColor(Resource.Styleable.CircleImageView_civ_border_color, DefaultBorderColor);
+            _borderOverlay = a.GetBoolean(Resource.Styleable.CircleImageView_civ_border_overlay, DefaultBorderOverlay);
+            _circleBackgroundColor = a.GetColor(Resource.Styleable.CircleImageView_civ_circle_background_color, DefaultCircleBackgroundColor);
 
             a.Recycle();
 
-            init();
+            Init();
         }
 
         public CircleImageView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes)
@@ -106,26 +101,26 @@ namespace ProjectK.Imaging
         }
 
 
-        private void init()
+        private void Init()
         {
-            mInitialized = true;
+            _initialized = true;
 
             base.SetScaleType(SCALE_TYPE);
 
-            mBitmapPaint.AntiAlias = true;
-            mBitmapPaint.Dither = true;
-            mBitmapPaint.FilterBitmap = true;
-            mBitmapPaint.Alpha = mImageAlpha;
-            mBitmapPaint.SetColorFilter(mColorFilter);
+            _bitmapPaint.AntiAlias = true;
+            _bitmapPaint.Dither = true;
+            _bitmapPaint.FilterBitmap = true;
+            _bitmapPaint.Alpha = _imageAlpha;
+            _bitmapPaint.SetColorFilter(_mColorFilter);
 
-            mBorderPaint.SetStyle(Android.Graphics.Paint.Style.Stroke);
-            mBorderPaint.AntiAlias = true;
-            mBorderPaint.Color = mBorderColor;
-            mBorderPaint.StrokeWidth = mBorderWidth;
+            _borderPaint.SetStyle(Android.Graphics.Paint.Style.Stroke);
+            _borderPaint.AntiAlias = true;
+            _borderPaint.Color = _borderColor;
+            _borderPaint.StrokeWidth = _borderWidth;
 
-            mCircleBackgroundPaint.SetStyle(Android.Graphics.Paint.Style.Fill);
-            mCircleBackgroundPaint.AntiAlias = true;
-            mCircleBackgroundPaint.Color = mCircleBackgroundColor;
+            _circleBackgroundPaint.SetStyle(Android.Graphics.Paint.Style.Fill);
+            _circleBackgroundPaint.AntiAlias = true;
+            _circleBackgroundPaint.Color = _circleBackgroundColor;
 
             if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
             {
@@ -154,50 +149,50 @@ namespace ProjectK.Imaging
 
         protected override void OnDraw(Canvas canvas)
         {
-            if (mDisableCircularTransformation)
+            if (MDisableCircularTransformation)
             {
                 base.OnDraw(canvas);
                 return;
             }
 
-            if (mCircleBackgroundColor != Color.Transparent)
+            if (_circleBackgroundColor != Color.Transparent)
             {
-                canvas.DrawCircle(mDrawableRect.CenterX(), mDrawableRect.CenterY(), mDrawableRadius, mCircleBackgroundPaint);
+                canvas.DrawCircle(_drawableRect.CenterX(), _drawableRect.CenterY(), _drawableRadius, _circleBackgroundPaint);
             }
 
-            if (mBitmap != null)
+            if (_bitmap != null)
             {
-                if (mDrawableDirty && mBitmapCanvas != null)
+                if (_drawableDirty && _bitmapCanvas != null)
                 {
-                    mDrawableDirty = false;
+                    _drawableDirty = false;
                     var drawable = this.Drawable;
-                    drawable.SetBounds(0, 0, mBitmapCanvas.Width, mBitmapCanvas.Height);
-                    drawable.Draw(mBitmapCanvas);
+                    drawable.SetBounds(0, 0, _bitmapCanvas.Width, _bitmapCanvas.Height);
+                    drawable.Draw(_bitmapCanvas);
                 }
 
-                if (mRebuildShader)
+                if (_rebuildShader)
                 {
-                    mRebuildShader = false;
+                    _rebuildShader = false;
 
-                    var bitmapShader = new BitmapShader(mBitmap, Shader.TileMode.Clamp, Shader.TileMode.Clamp);
-                    bitmapShader.SetLocalMatrix(mShaderMatrix);
+                    var bitmapShader = new BitmapShader(_bitmap, Shader.TileMode.Clamp, Shader.TileMode.Clamp);
+                    bitmapShader.SetLocalMatrix(_shaderMatrix);
 
-                    mBitmapPaint.SetShader(bitmapShader);
+                    _bitmapPaint.SetShader(bitmapShader);
                 }
 
-                canvas.DrawCircle(mDrawableRect.CenterX(), mDrawableRect.CenterY(), mDrawableRadius, mBitmapPaint);
+                canvas.DrawCircle(_drawableRect.CenterX(), _drawableRect.CenterY(), _drawableRadius, _bitmapPaint);
             }
 
-            if (mBorderWidth > 0)
+            if (_borderWidth > 0)
             {
-                canvas.DrawCircle(mBorderRect.CenterX(), mBorderRect.CenterY(), mBorderRadius, mBorderPaint);
+                canvas.DrawCircle(MBorderRect.CenterX(), MBorderRect.CenterY(), _borderRadius, _borderPaint);
             }
         }
 
 
         public override void InvalidateDrawable(/*AK @NonNull*/ Drawable dr)
         {
-            mDrawableDirty = true;
+            _drawableDirty = true;
             Invalidate();
         }
 
@@ -222,37 +217,37 @@ namespace ProjectK.Imaging
             Invalidate();
         }
 
-        public int getBorderColor()
+        public int GetBorderColor()
         {
-            return mBorderColor;
+            return _borderColor;
         }
 
         public void SetBorderColor(/* AK @ColorInt*/ Color borderColor)
         {
-            if (borderColor == mBorderColor)
+            if (borderColor == _borderColor)
             {
                 return;
             }
 
-            mBorderColor = borderColor;
-            mBorderPaint.Color = borderColor;
+            _borderColor = borderColor;
+            _borderPaint.Color = borderColor;
             Invalidate();
         }
 
         public int GetCircleBackgroundColor()
         {
-            return mCircleBackgroundColor;
+            return _circleBackgroundColor;
         }
 
         public void SetCircleBackgroundColor(Color circleBackgroundColor)
         {
-            if (circleBackgroundColor == mCircleBackgroundColor)
+            if (circleBackgroundColor == _circleBackgroundColor)
             {
                 return;
             }
 
-            mCircleBackgroundColor = circleBackgroundColor;
-            mCircleBackgroundPaint.Color = circleBackgroundColor;
+            _circleBackgroundColor = circleBackgroundColor;
+            _circleBackgroundPaint.Color = circleBackgroundColor;
             Invalidate();
         }
 
@@ -267,16 +262,16 @@ namespace ProjectK.Imaging
 
         public int BorderWidth
         {
-            get => mBorderWidth;
+            get => _borderWidth;
             set
             {
-                if (value == mBorderWidth)
+                if (value == _borderWidth)
                 {
                     return;
                 }
 
-                mBorderWidth = value;
-                mBorderPaint.StrokeWidth = value;
+                _borderWidth = value;
+                _borderPaint.StrokeWidth = value;
                 UpdateDimensions();
                 Invalidate();
             }
@@ -284,15 +279,15 @@ namespace ProjectK.Imaging
 
         public bool IsBorderOverlay
         {
-            get => mBorderOverlay;
+            get => _borderOverlay;
             set
             {
-                if (value == mBorderOverlay)
+                if (value == _borderOverlay)
                 {
                     return;
                 }
 
-                mBorderOverlay = value;
+                _borderOverlay = value;
                 UpdateDimensions();
                 Invalidate();
             }
@@ -300,22 +295,22 @@ namespace ProjectK.Imaging
 
         public bool IsDisableCircularTransformation
         {
-            get => mDisableCircularTransformation;
+            get => MDisableCircularTransformation;
 
             set
             {
-                if (value == mDisableCircularTransformation)
+                if (value == MDisableCircularTransformation)
                 {
                     return;
                 }
 
-                mDisableCircularTransformation = value;
+                MDisableCircularTransformation = value;
 
                 if (value)
                 {
-                    mBitmap = null;
-                    mBitmapCanvas = null;
-                    mBitmapPaint.SetShader(null);
+                    _bitmap = null;
+                    _bitmapCanvas = null;
+                    _bitmapPaint.SetShader(null);
                 }
                 else
                 {
@@ -358,51 +353,51 @@ namespace ProjectK.Imaging
 
         public override int ImageAlpha
         {
-            get => mImageAlpha;
+            get => _imageAlpha;
             set
             {
                 var alpha = value;
                 alpha &= 0xFF;
 
-                if (alpha == mImageAlpha)
+                if (alpha == _imageAlpha)
                 {
                     return;
                 }
 
-                mImageAlpha = alpha;
+                _imageAlpha = alpha;
 
                 // This might be called during ImageView construction before
                 // member initialization has finished on API level >= 16.
-                if (mInitialized)
+                if (_initialized)
                 {
-                    mBitmapPaint.Alpha = alpha;
+                    _bitmapPaint.Alpha = alpha;
                     Invalidate();
                 }
             }
         }
 
 
-        public override ColorFilter ColorFilter => mColorFilter;
+        public override ColorFilter ColorFilter => _mColorFilter;
 
         public override void SetColorFilter(ColorFilter cf)
         {
-            if (cf == mColorFilter)
+            if (cf == _mColorFilter)
             {
                 return;
             }
 
-            mColorFilter = cf;
+            _mColorFilter = cf;
 
             // This might be called during ImageView construction before
             // member initialization has finished on API level <= 19.
-            if (mInitialized)
+            if (_initialized)
             {
-                mBitmapPaint.SetColorFilter(cf);
+                _bitmapPaint.SetColorFilter(cf);
                 Invalidate();
             }
         }
 
-        private Bitmap getBitmapFromDrawable(Drawable drawable)
+        private Bitmap GetBitmapFromDrawable(Drawable drawable)
         {
             if (drawable == null)
             {
@@ -420,11 +415,11 @@ namespace ProjectK.Imaging
 
                 if (drawable is ColorDrawable colorDrawable)
                 {
-                    bitmap = Bitmap.CreateBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG);
+                    bitmap = Bitmap.CreateBitmap(ColorDrawableDimension, ColorDrawableDimension, BitmapConfig);
                 }
                 else
                 {
-                    bitmap = Bitmap.CreateBitmap(drawable.IntrinsicWidth, drawable.IntrinsicHeight, BITMAP_CONFIG);
+                    bitmap = Bitmap.CreateBitmap(drawable.IntrinsicWidth, drawable.IntrinsicHeight, BitmapConfig);
                 }
 
                 var canvas = new Canvas(bitmap);
@@ -441,44 +436,44 @@ namespace ProjectK.Imaging
 
         private void InitializeBitmap()
         {
-            mBitmap = getBitmapFromDrawable(Drawable);
+            _bitmap = GetBitmapFromDrawable(Drawable);
 
-            if (mBitmap != null && mBitmap.IsMutable)
+            if (_bitmap != null && _bitmap.IsMutable)
             {
-                mBitmapCanvas = new Canvas(mBitmap);
+                _bitmapCanvas = new Canvas(_bitmap);
             }
             else
             {
-                mBitmapCanvas = null;
+                _bitmapCanvas = null;
             }
 
-            if (!mInitialized)
+            if (!_initialized)
             {
                 return;
             }
 
-            if (mBitmap != null)
+            if (_bitmap != null)
             {
                 UpdateShaderMatrix();
             }
             else
             {
-                mBitmapPaint.SetShader(null);
+                _bitmapPaint.SetShader(null);
             }
         }
 
         private void UpdateDimensions()
         {
-            mBorderRect.Set(CalculateBounds());
-            mBorderRadius = Math.Min((mBorderRect.Height() - mBorderWidth) / 2.0f, (mBorderRect.Width() - mBorderWidth) / 2.0f);
+            MBorderRect.Set(CalculateBounds());
+            _borderRadius = Math.Min((MBorderRect.Height() - _borderWidth) / 2.0f, (MBorderRect.Width() - _borderWidth) / 2.0f);
 
-            mDrawableRect.Set(mBorderRect);
-            if (!mBorderOverlay && mBorderWidth > 0)
+            _drawableRect.Set(MBorderRect);
+            if (!_borderOverlay && _borderWidth > 0)
             {
-                mDrawableRect.Inset(mBorderWidth - 1.0f, mBorderWidth - 1.0f);
+                _drawableRect.Inset(_borderWidth - 1.0f, _borderWidth - 1.0f);
             }
 
-            mDrawableRadius = Math.Min(mDrawableRect.Height() / 2.0f, mDrawableRect.Width() / 2.0f);
+            _drawableRadius = Math.Min(_drawableRect.Height() / 2.0f, _drawableRect.Width() / 2.0f);
 
             UpdateShaderMatrix();
         }
@@ -498,7 +493,7 @@ namespace ProjectK.Imaging
 
         private void UpdateShaderMatrix()
         {
-            if (mBitmap == null)
+            if (_bitmap == null)
             {
                 return;
             }
@@ -507,48 +502,48 @@ namespace ProjectK.Imaging
             float dx = 0;
             float dy = 0;
 
-            mShaderMatrix.Set(null);
+            _shaderMatrix.Set(null);
 
-            var bitmapHeight = mBitmap.Height;
-            var bitmapWidth = mBitmap.Width;
+            var bitmapHeight = _bitmap.Height;
+            var bitmapWidth = _bitmap.Width;
 
-            if (bitmapWidth * mDrawableRect.Height() > mDrawableRect.Width() * bitmapHeight)
+            if (bitmapWidth * _drawableRect.Height() > _drawableRect.Width() * bitmapHeight)
             {
-                scale = mDrawableRect.Height() / (float) bitmapHeight;
-                dx = (mDrawableRect.Width() - bitmapWidth * scale) * 0.5f;
+                scale = _drawableRect.Height() / (float) bitmapHeight;
+                dx = (_drawableRect.Width() - bitmapWidth * scale) * 0.5f;
             }
             else
             {
-                scale = mDrawableRect.Width() / (float) bitmapWidth;
-                dy = (mDrawableRect.Height() - bitmapHeight * scale) * 0.5f;
+                scale = _drawableRect.Width() / (float) bitmapWidth;
+                dy = (_drawableRect.Height() - bitmapHeight * scale) * 0.5f;
             }
 
-            mShaderMatrix.SetScale(scale, scale);
-            mShaderMatrix.PostTranslate((int) (dx + 0.5f) + mDrawableRect.Left, (int) (dy + 0.5f) + mDrawableRect.Top);
+            _shaderMatrix.SetScale(scale, scale);
+            _shaderMatrix.PostTranslate((int) (dx + 0.5f) + _drawableRect.Left, (int) (dy + 0.5f) + _drawableRect.Top);
 
-            mRebuildShader = true;
+            _rebuildShader = true;
         }
 
         //Ak @SuppressLint("ClickableViewAccessibility")
 
         public override bool OnTouchEvent(MotionEvent e)
         {
-            if (mDisableCircularTransformation)
+            if (MDisableCircularTransformation)
             {
                 return base.OnTouchEvent(e);
             }
 
-            return inTouchableArea(e.GetX(), e.GetY()) && base.OnTouchEvent(e);
+            return InTouchableArea(e.GetX(), e.GetY()) && base.OnTouchEvent(e);
         }
 
-        private bool inTouchableArea(float x, float y)
+        private bool InTouchableArea(float x, float y)
         {
-            if (mBorderRect.IsEmpty)
+            if (MBorderRect.IsEmpty)
             {
                 return true;
             }
 
-            return Math.Pow(x - mBorderRect.CenterX(), 2) + Math.Pow(y - mBorderRect.CenterY(), 2) <= Math.Pow(mBorderRadius, 2);
+            return Math.Pow(x - MBorderRect.CenterX(), 2) + Math.Pow(y - MBorderRect.CenterY(), 2) <= Math.Pow(_borderRadius, 2);
         }
 
         // @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
