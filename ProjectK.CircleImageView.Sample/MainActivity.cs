@@ -6,7 +6,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 
-namespace de.hdodenhof.circleimageview.Sample.Sample
+namespace ProjectK.Imaging.Sample
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
@@ -15,25 +15,25 @@ namespace de.hdodenhof.circleimageview.Sample.Sample
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            SetContentView(Resource.Layout.activity_main);
+            SetContentView(Sample.Resource.Layout.activity_main);
 
-            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Sample.Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            var fab = FindViewById<FloatingActionButton>(Sample.Resource.Id.fab);
             fab.Click += FabOnClick;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
+            MenuInflater.Inflate(Sample.Resource.Menu.menu_main, menu);
             return true;
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             var id = item.ItemId;
-            if (id == Resource.Id.action_settings)
+            if (id == Sample.Resource.Id.action_settings)
             {
                 return true;
             }

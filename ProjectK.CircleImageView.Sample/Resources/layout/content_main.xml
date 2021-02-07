@@ -12,7 +12,7 @@
         android:padding="@dimen/base_padding"
         android:background="@color/light">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ProjectK.Imaging.CircleImageView
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_centerInParent="true"
@@ -29,7 +29,7 @@
         android:padding="@dimen/base_padding"
         android:background="@color/dark">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ProjectK.Imaging.CircleImageView
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_centerInParent="true"

@@ -31,7 +31,7 @@ using Exception = Java.Lang.Exception;
 using Math = Java.Lang.Math;
 using Uri = Android.Net.Uri;
 
-namespace de.hdodenhof.circleimageview
+namespace ProjectK.Imaging
 {
     public class CircleImageView : ImageView
     {

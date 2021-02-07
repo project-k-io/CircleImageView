@@ -10,8 +10,8 @@
     <TemplateGuid>{84dd83c5-0fe3-4294-9419-09e7c8ba324f}</TemplateGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>de.hdodenhof.circleimageview.Sample.Sample</RootNamespace>
-    <AssemblyName>de.hdodenhof.circleimageview.Sample</AssemblyName>
+    <RootNamespace>ProjectK.Imaging.Sample</RootNamespace>
+    <AssemblyName>ProjectK.CircleImageView.Sample</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <Deterministic>True</Deterministic>
     <AndroidApplication>True</AndroidApplication>
@@ -19,7 +19,7 @@
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
@@ -123,9 +123,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\de.hdodenhof.CircleImageView.Library\de.hdodenhof.CircleImageView.Library.csproj">
+    <ProjectReference Include="..\ProjectK.CircleImageView.Library\ProjectK.CircleImageView.Library.csproj">
       <Project>{d0d3539f-1e01-44c7-b7a4-9f718842d74c}</Project>
-      <Name>de.hdodenhof.CircleImageView.Library</Name>
+      <Name>ProjectK.CircleImageView.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

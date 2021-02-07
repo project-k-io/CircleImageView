@@ -1,7 +1,7 @@
 using Android.Graphics;
 using Android.Views;
 
-namespace de.hdodenhof.circleimageview
+namespace ProjectK.Imaging
 {
     public class OutlineProvider : ViewOutlineProvider
     {
