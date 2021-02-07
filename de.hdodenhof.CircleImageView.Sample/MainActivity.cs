@@ -15,25 +15,26 @@ namespace de.hdodenhof.circleimageview.Sample
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            SetContentView(Sample.Resource.Layout.activity_main);
+            SetContentView(Resource.Layout.activity_main);
 
-            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Sample.Resource.Id.toolbar);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            var fab = FindViewById<FloatingActionButton>(Sample.Resource.Id.fab);
-            fab.Click += FabOnClick;
+            var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            if(fab != null)
+                fab.Click += FabOnClick;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            MenuInflater.Inflate(Sample.Resource.Menu.menu_main, menu);
+            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
             return true;
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             var id = item.ItemId;
-            if (id == Sample.Resource.Id.action_settings)
+            if (id == Resource.Id.action_settings)
             {
                 return true;
             }
@@ -45,7 +46,7 @@ namespace de.hdodenhof.circleimageview.Sample
         {
             var view = (View) sender;
             Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+                .SetAction("Action", (View.IOnClickListener)null).Show();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

@@ -5,22 +5,22 @@ namespace de.hdodenhof.circleimageview
 {
     public class OutlineProvider : ViewOutlineProvider
     {
-        private readonly CircleImageView _view;
+        private readonly CircleImageView mView;
         public OutlineProvider(CircleImageView view)
         {
-            _view = view;
+            mView = view;
         }
 
         public override void GetOutline(View view, Outline outline)
         {
-            if (_view.mDisableCircularTransformation)
+            if (mView.IsDisableCircularTransformation)
             {
-                Background.GetOutline(view, outline);
+                Background?.GetOutline(view, outline);
             }
             else
             {
                 var bounds = new Rect();
-                _view.mBorderRect.RoundOut(bounds);
+                mView.BorderRect.RoundOut(bounds);
                 outline.SetRoundRect(bounds, bounds.Width() / 2.0f);
             }
         }
