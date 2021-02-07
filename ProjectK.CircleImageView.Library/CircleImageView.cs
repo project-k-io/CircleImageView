@@ -37,7 +37,7 @@ namespace ProjectK.Imaging
     {
         #region Static
 
-        private static readonly ScaleType SCALE_TYPE = ScaleType.CenterCrop;
+        private static readonly ScaleType DefaultScaleType = ScaleType.CenterCrop;
         private static readonly Bitmap.Config BitmapConfig = Bitmap.Config.Argb8888;
         private static readonly Color DefaultBorderColor = Color.Black;
         private static readonly Color DefaultCircleBackgroundColor = Color.Transparent;
@@ -180,7 +180,7 @@ namespace ProjectK.Imaging
 
         public override void SetScaleType(ScaleType scaleType)
         {
-            if (scaleType != SCALE_TYPE)
+            if (scaleType != DefaultScaleType)
             {
                 throw new IllegalArgumentException($"ScaleType {scaleType} not supported.");
             }
@@ -344,7 +344,7 @@ namespace ProjectK.Imaging
         {
             _initialized = true;
 
-            base.SetScaleType(SCALE_TYPE);
+            base.SetScaleType(DefaultScaleType);
 
             _bitmapPaint.AntiAlias = true;
             _bitmapPaint.Dither = true;
